@@ -17,7 +17,7 @@ function App() {
   }, [])
 
   const submitHandle = (event) => {
-    event.target.value
+    messagesList.concat(state);
     event.preventDefault();
   }
 
