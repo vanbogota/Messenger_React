@@ -1,39 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { TextField } from "@material-ui/core";
 
 function App() {
 
-  const [state, setState] = useState([]);
+  const [text, setText] = useState('');
+  const [author, setAuthor] = useState('');
+  const [state, setState] = useState([{ text: '', author: 'user' }]);
 
-  const messagesList = [
-    {
-      author: 'test',
-      text: 'test'
-    }
-  ]
+  const changeHandle = (event) => {
+    setState(event.target.value)
+  }
 
-  useEffect(() => {
-    setState(messagesList)
-  }, [])
-
-  const submitHandle = (event) => {
-    messagesList.concat(state);
+  function submitHandle(event) {
     event.preventDefault();
+    if (state.length > 0) {
+      setState(pervstate => [...pervstate, { text, author }]);
+    }
   }
 
   return (
-    <>
-      <div>
-        {messagesList.map((message) => <><h1>{message.author}</h1> <p>{message.text}</p></>)}
-      </div>
+    <React.Fragment>
       <form onSubmit={submitHandle}>
-        <label>
-          Your Message:
-          <input type="text" value={state} onChange={value => setState(value)} />
-        </label>
+        Your Message:
+        <input type="text" onChange={changeHandle} />
         <input type="submit" value="Send" />
       </form>
-    </>
+      {state.map((message) => <div>Author {message.author} his mess: {message.text}</div>)}
+    </React.Fragment>
   );
 }
 
