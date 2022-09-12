@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 import { TextField } from "@material-ui/core";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import Routing from "./routes/MyRoutes";
 
-const chats = [{ id: 1, name: 'chat1' }]
+const chats = [{ id: 1, name: 'chat1' }, { id: 2, name: 'chat2' }, { id: 3, name: 'chat3' }]
 
 function App() {
 
@@ -12,7 +14,7 @@ function App() {
 
   const handleChange = (event) => {
     setText(event.target.value);
-    setAuthor('user');
+    setAuthor('Me');
   }
 
   function handleSubmit(event) {
@@ -31,18 +33,17 @@ function App() {
 
   return (
     <>
-      <TextField
-        style={{ margin: '20px' }}
-        id="outlined-basic"
-        label="Outlined"
-        variant="outlined"
-        value={text}
-        onChange={handleChange}
-      />
+      <Routing />
       <form onSubmit={handleSubmit}>
-        Your Message:
-        <input ref={inputRef} type="text" onChange={handleChange} />
-        <input type="submit" value="Send" />
+        <TextField
+          style={{ margin: '20px' }}
+          id="outlined-basic"
+          label="Your Message"
+          variant="outlined"
+          value={text}
+          onChange={handleChange}
+        />
+        <input ref={inputRef} type="submit" value="Send" />
       </form>
       <table>
         <tr>
