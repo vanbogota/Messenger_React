@@ -33,7 +33,6 @@ function App() {
 
   return (
     <>
-      <Routing />
       <form onSubmit={handleSubmit}>
         <TextField
           style={{ margin: '20px' }}
