@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-export default function MessagesList({ messages }) {
+export default function MessagesList() {
+    const profileName = useSelector(state => state.profile.name);
 
-    return messages.map((message) =>
-        <div>
-            <h4>{message.author}</h4>
-            <p>{message.text}</p>
-        </div>);
+    const renderMessage = useCallback((message, i) => (
+        <div key={i}>
+            <span>
+                {message.author === "ME" ? profileName : message.author}:
+            </span>
+            <span>{message.text}</span>
+        </div>
+    ), [profileName]);
+
+    return renderMessage;
 }
