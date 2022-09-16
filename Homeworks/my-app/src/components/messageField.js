@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { getChatList } from '../store/chats/selectors';
 import { addMessage } from '../store/messages/actions';
+import { getMessagesList } from '../store/messages/selectors';
 
 function MessageField() {
 
@@ -8,8 +10,8 @@ function MessageField() {
     const [author, setAuthor] = useState('');
     // const [messageList, setState] = useState([{ text: '', author: '' }]);
 
-    const chats = useSelector(state => state.chats.chatList);
-    const messages = useSelector(state => state.messages.messageList)
+    const chats = useSelector(getChatList, shallowEqual);
+    const messages = useSelector(getMessagesList, shallowEqual)
     const dispatch = useDispatch();
     const onAddMessage = (message) => {
         dispatch(addMessage(chatId, message));

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useParams, Outlet } from "react-router-dom";
 import MessagesList from '../components/messageslist';
-import { initialChats } from './initials';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Button, Dialog, DialogTitle, TextField } from '@material-ui/core';
 import { addChat } from '../store/chats/actions';
+import { getChatList } from '../store/chats/selectors';
 
 const ChatList = ({ chatId }) => {
     const [visible, setVisible] = useState(false);
     const [newChatName, setNewChatName] = useState("");
 
-    const chats = useSelector((state) => state.chats.chatList);
+    const chats = useSelector(getChatList, shallowEqual);
     const dispatch = useDispatch();
 
     const handleClose = () => setVisible(false);
@@ -53,11 +53,11 @@ const ChatList = ({ chatId }) => {
 
 export default function Chats() {
     const { chatId } = useParams();
-    const [chats, setChats] = useState(initialChats);
+    const chats = useSelector(getChatList, shallowEqual);;
 
     if (!chats[chatId]) {
         return (<>
-            <ChatList chats={chats} chatId={'id1'} />
+            <ChatList chatId={'id1'} />
         </>)
     }
     return (
@@ -65,7 +65,7 @@ export default function Chats() {
             <header>Chats List</header>
             <div className="wrapper">
                 <div>
-                    <ChatList chats={chats} chatId={chatId} />
+                    <ChatList chatId={chatId} />
                 </div>
                 <div>
                     <MessagesList messages={chats[chatId].messages} />

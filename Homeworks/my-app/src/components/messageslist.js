@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
+import { shallowEqual, useSelector } from "react-redux";
+import { getProfileName } from "../store/profile/selectors";
 
 
-function MessagesList({ message }) {
-    const profileName = useSelector(state => state.profile.name)
+function MessagesList({ messages }) {
+    const profileName = useSelector(getProfileName, shallowEqual);
     const renderMessage = useCallback((message, i) => (
         <div key={i}>
             <span>
@@ -12,7 +13,12 @@ function MessagesList({ message }) {
         </div>
     ), [profileName])
 
-    return renderMessage;
+    return messages.map((message) =>
+        <div>
+            {renderMessage}
+            {message.text}
+        </div>
+    )
 }
 
 export default MessagesList
