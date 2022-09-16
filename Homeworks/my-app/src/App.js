@@ -10,7 +10,7 @@ function App() {
 
   const [text, setText] = useState('');
   const [author, setAuthor] = useState('');
-  const [messageList, setState] = useState([{ text: '', author: '' }]);
+  const [messageList, setMessage] = useState([{ text: '', author: '' }]);
 
   const handleChange = (event) => {
     setText(event.target.value);
@@ -20,7 +20,7 @@ function App() {
   function handleSubmit(event) {
     event.preventDefault();
     if (messageList.length > 0) {
-      setState(pervstate => [...pervstate, { text, author }]);
+      setMessage(pervstate => [...pervstate, { text, author }]);
     }
   }
 
