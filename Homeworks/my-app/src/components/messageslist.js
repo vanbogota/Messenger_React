@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useCallback } from "react";
+import { shallowEqual, useSelector } from "react-redux";
+import { getProfileName } from "../store/profile/selectors";
 
-export default function MessagesList({ messages }) {
+
+function MessagesList({ messages }) {
+    const profileName = useSelector(getProfileName, shallowEqual);
+    const renderMessage = useCallback((message, i) => (
+        <div key={i}>
+            <span>
+                {message.author === 'ME' ? profileName : message.author}
+            </span>
+        </div>
+    ), [profileName])
 
     return messages.map((message) =>
         <div>
-            <h4>{message.author}</h4>
-            <p>{message.text}</p>
-        </div>);
+            {renderMessage}
+            {message.text}
+        </div>
+    )
 }
+
+export default MessagesList
