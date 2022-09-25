@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from "react";
-import { showNameAction, changeName } from "../store/profile/actions";
 import { useSelector, useDispatch } from "react-redux";
+import { showName, changeName } from "../slices/slices";
 
 export default function Profile() {
-    const { showName, name } = useSelector((state) => state);
+    const { showN, name } = useSelector((state) => state);
     const dispatch = useDispatch();
     const [value, setValue] = useState('');
 
     const setShowName = useCallback(() => {
-        dispatch(showNameAction);
-    }, [dispatch]);
+        dispatch(showName(showN));
+    }, [dispatch, showN]);
 
     const handleChange = useCallback((e) => {
         setValue(e.target.value);
@@ -27,12 +27,12 @@ export default function Profile() {
             <div>
                 <input
                     type="checkbox"
-                    checked={showName}
-                    value={showName}
+                    checked={showN}
+                    value={showN}
                     onChange={setShowName}
                 />
                 <span>Show Name</span>
-                {showName && <div>{name}</div>}
+                {showN && <div>{name}</div>}
             </div>
             <div>
                 <input

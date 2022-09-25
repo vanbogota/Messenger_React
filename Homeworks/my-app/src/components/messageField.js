@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { TextField } from '@material-ui/core';
+import React, { useEffect, useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getChatList } from '../store/chats/selectors';
+import { getChatById, getChatList } from '../store/chats/selectors';
 import { addMessage } from '../store/messages/actions';
 import { getMessagesList } from '../store/messages/selectors';
 
-function MessageField() {
+function MessageField({ chatId }) {
 
     const [text, setText] = useState('');
     const [author, setAuthor] = useState('');
@@ -12,6 +13,9 @@ function MessageField() {
 
     const chats = useSelector(getChatList, shallowEqual);
     const messages = useSelector(getMessagesList, shallowEqual)
+    const getSelectedChat = useMemo(() => getChatById(chatId), [chatId]);
+    const selectedChat = useSelector(getSelectedChat);
+
     const dispatch = useDispatch();
     const onAddMessage = (message) => {
         dispatch(addMessage(chatId, message));
@@ -27,13 +31,6 @@ function MessageField() {
         onAddMessage(event)
     }
 
-    const inputRef = useRef(null);
-
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, []);
-
-
     return (
         <>
             <form onSubmit={handleSubmit}>
@@ -45,7 +42,7 @@ function MessageField() {
                     value={text}
                     onChange={handleChange}
                 />
-                <input ref={inputRef} type="submit" value="Send" />
+                <input type="submit" value="Send" />
             </form>
         </>
     )

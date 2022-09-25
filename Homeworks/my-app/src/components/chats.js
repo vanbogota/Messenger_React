@@ -3,8 +3,9 @@ import { Link, useParams, Outlet } from "react-router-dom";
 import MessagesList from '../components/messageslist';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Button, Dialog, DialogTitle, TextField } from '@material-ui/core';
-import { addChat } from '../store/chats/actions';
 import { getChatList } from '../store/chats/selectors';
+import MessageField from './messageField';
+import { addChat } from '../slices/slices';
 
 const ChatList = ({ chatId }) => {
     const [visible, setVisible] = useState(false);
@@ -57,7 +58,7 @@ export default function Chats() {
 
     if (!chats[chatId]) {
         return (<>
-            <ChatList chatId={'id1'} />
+            <ChatList />
         </>)
     }
     return (
@@ -69,6 +70,9 @@ export default function Chats() {
                 </div>
                 <div>
                     <MessagesList messages={chats[chatId].messages} />
+                </div>
+                <div>
+                    <MessageField chatId={chatId} />
                 </div>
             </div>
         </>
