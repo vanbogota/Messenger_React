@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialChats } from "../components/initials";
 
-const init = initialChats;
+const initialState1 = {
+    chatList: initialChats,
+};
 
 const chatSlice = createSlice({
     name: 'chats',
-    initialState: init,
+    initialState: initialState1,
     reducers: {
         addChat: (state, action) => {
             return {
@@ -13,7 +15,7 @@ const chatSlice = createSlice({
                 chatList: [
                     ...state.chatList,
                     {
-                        id: `id${state.chatList.length}`,
+                        id: `${state.chatList.length}`,
                         name: action.name,
                     },
                 ],
@@ -25,9 +27,13 @@ const chatSlice = createSlice({
 export const { addChat } = chatSlice.actions;
 export const chatReducer = chatSlice.reducer;
 
+const initialState2 = {
+    messageList: initialChats,
+};
+
 const messageSlice = createSlice({
     name: 'messages',
-    initialState: init,
+    initialState: initialState2,
     reducers: {
         addMessage: (state, action) => {
             const currentList = state.messageList[action.chatId] || [];
@@ -61,7 +67,7 @@ const profileSlice = createSlice({
     name: 'profile',
     initialState: profileInitialState,
     reducers: {
-        showName: (state, action) => {
+        showName: (state) => {
             return {
                 ...state,
                 showName: !state.showName
