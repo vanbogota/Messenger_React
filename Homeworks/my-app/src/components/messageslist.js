@@ -6,21 +6,22 @@ import { getProfileName } from "../store/profile/selectors";
 function MessagesList({ messages }) {
 
     const profileName = useSelector(getProfileName, shallowEqual);
-    const renderMessage = useCallback((message, i) => (
+    const renderMessage = useCallback((messages, i) => (
         <div key={i}>
             <span>
-                {message.author === 'ME' ? profileName : message.author}
+                {messages.author === 'ME' ? profileName : messages.author}
             </span>
         </div>
     ), [profileName])
+
     if (!messages) {
         return (<div> no messages </div>)
     }
-    return messages.map((message) =>
-        <div>
+    return (
+        messages.map((message) => <div>
             {renderMessage}
             {message.text}
-        </div>
+        </div>)
     )
 }
 

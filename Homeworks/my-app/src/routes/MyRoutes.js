@@ -6,6 +6,7 @@ import Chats from '../components/chats';
 import { initialChats } from '../components/initials';
 import { Provider } from "react-redux";
 import { store } from '../store';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 
 function Routing() {
     const [chats, setChats] = useState(initialChats);
@@ -23,17 +24,21 @@ function Routing() {
                 </nav>
             </header>
             <Provider store={store}>
-                <Routes>
-                    <Route exact path='/' element={<Home />} />
-                    <Route path='profile' element={<Profile />} />
-                    <Route path='chats' element={<Chats chats={chats} setChats={setChats} />}>
-                        <Route path=':chatId' element={<Chats chats={chats} setChats={setChats} />} />
-                    </Route>
-                    <Route path='*' element={<h3>Page not found</h3>} />
-                </Routes>
+                <PersistGate persistor={persistor} loading={<CircularProgress />}>
+                    <Routes>
+                        <Route exact path='/' element={<Home />} />
+                        <Route path='profile' element={<Profile />} />
+                        <Route path='chats' element={<Chats />}>
+                            <Route path=':chatId' element={<Chats />} />
+                        </Route>
+                        <Route path='*' element={<h3>Page not found</h3>} />
+                    </Routes>
+                </PersistGate>
             </Provider>
         </BrowserRouter >
     )
 }
 
 export default Routing;
+
+// chats={chats} setChats={setChats}
