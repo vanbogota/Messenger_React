@@ -4,10 +4,10 @@ import MessagesList from '../components/messageslist';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { Button, Dialog, DialogTitle, TextField } from '@material-ui/core';
 import { getChatList } from '../store/chats/selectors';
-import MessageField from './messageField';
+import { MessageField } from './messageField';
 import { addChat } from '../slices/slices';
 
-const ChatList = ({ chatId }) => {
+export const ChatList = ({ chatId }) => {
     const [visible, setVisible] = useState(false);
     const [newChatName, setNewChatName] = useState("");
 

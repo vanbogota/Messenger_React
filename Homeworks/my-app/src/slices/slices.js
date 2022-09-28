@@ -15,7 +15,7 @@ const chatSlice = createSlice({
                 chatList: [
                     ...state.chatList,
                     {
-                        id: `${state.chatList.length}`,
+                        id: `id${state.chatList.length}`,
                         name: action.name,
                     },
                 ],
