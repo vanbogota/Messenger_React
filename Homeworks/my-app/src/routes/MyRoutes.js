@@ -8,8 +8,22 @@ import { persistor, store } from '../store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { GistsList } from '../components/gists';
 import { CircularProgress } from '@material-ui/core';
+import { SignUp } from '../components/signup';
+import { Login } from '../components/login';
+import PublicRoute from '../hocs/PublicRote';
+import PrivateRoute from '../hocs/PrivateRoute';
 
 function Routing() {
+    const [authed, setAuthed] = useState(false);
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                setAuthed(true);
+            } else {
+                setAuthed(false);
+            }
+        })
+    }, []);
 
     return (
         <BrowserRouter>
@@ -22,21 +36,25 @@ function Routing() {
                     <Link to="/chats">Chats </Link>
                     <Link to="/">Home </Link>
                     <Link to="/gists">Gists </Link>
+                    <Link to="/signup">Registration</Link>
+                    <Link to="/login">Login</Link>
                 </nav>
             </header>
             <Provider store={store}>
                 <PersistGate persistor={persistor} loading={<CircularProgress />}>
                     <Routes>
-                        <Route exact path='/' element={<Home />} />
-                        <Route path='profile' element={<Profile />} />
-                        <Route path='chats' loader={({ match }) => {
+                        <PublicRoute authenticated={authed} exact path='/' element={<Home />} />
+                        <PrivateRoute authenticated={authed} path='profile' element={<Profile />} />
+                        <PrivateRoute authenticated={authed} path='chats' loader={({ match }) => {
                             return redirect("/chats/id1");
                         }} >
-                            < Route path=':chatId' element={< Chats />} />
-                        </Route>
+                            < PrivateRoute authenticated={authed} path=':chatId' element={< Chats />} />
+                        </PrivateRoute>
                         <Route path='*' element={<h3>Page not found</h3>} />
-                        <Route path='/gists' element={<GistsList />} />
-                        <Route path='/nocaht' element={<h3>нет чатов</h3>} />
+                        <PublicRoute authenticated={authed} path='/gists' element={<GistsList />} />
+                        <PrivateRoute authenticated={authed} path='/nochat' element={<h3>нет чатов</h3>} />
+                        <PublicRoute authenticated={authed} path='/signup' element={<SignUp />} />
+                        <PublicRoute authenticated={authed} path='/login' element={<Login />} />
                     </Routes>
                 </PersistGate>
             </Provider>
@@ -46,4 +64,3 @@ function Routing() {
 
 export default Routing;
 
-// chats={chats} setChats={setChats}
