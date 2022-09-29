@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Route, Routes, Link, redirect } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link, redirect, Navigate } from "react-router-dom";
 import Profile from '../components/profile';
 import { Home } from '../components/home';
 import Chats from '../components/chats';
@@ -45,9 +45,7 @@ function Routing() {
                     <Routes>
                         <PublicRoute authenticated={authed} exact path='/' element={<Home />} />
                         <PrivateRoute authenticated={authed} path='profile' element={<Profile />} />
-                        <PrivateRoute authenticated={authed} path='chats' loader={({ match }) => {
-                            return redirect("/chats/id1");
-                        }} >
+                        <PrivateRoute authenticated={authed} path='chats' element={<Navigate replace to="/chats/id1" />} >
                             < PrivateRoute authenticated={authed} path=':chatId' element={< Chats />} />
                         </PrivateRoute>
                         <Route path='*' element={<h3>Page not found</h3>} />
