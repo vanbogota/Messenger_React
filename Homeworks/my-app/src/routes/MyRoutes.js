@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, Link, redirect, Navigate } from "react-router-dom";
 import Profile from '../components/profile';
 import { Home } from '../components/home';
@@ -12,6 +12,7 @@ import { SignUp } from '../components/signup';
 import { Login } from '../components/login';
 import PublicRoute from '../hocs/PublicRote';
 import PrivateRoute from '../hocs/PrivateRoute';
+import firebase from "firebase";
 
 function Routing() {
     const [authed, setAuthed] = useState(false);
