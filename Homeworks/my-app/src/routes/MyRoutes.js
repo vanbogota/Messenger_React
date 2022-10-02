@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes, Link, redirect, Navigate } from "react-router-dom";
+import { Route, Routes, Link, Navigate } from "react-router-dom";
 import Profile from '../components/profile';
 import { Home } from '../components/home';
 import Chats from '../components/chats';
-import { Provider } from "react-redux";
-import { persistor, store } from '../store';
+import { persistor } from '../store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { GistsList } from '../components/gists';
 import { CircularProgress } from '@material-ui/core';
@@ -12,22 +11,13 @@ import { SignUp } from '../components/signup';
 import { Login } from '../components/login';
 import PublicRoute from '../hocs/PublicRote';
 import PrivateRoute from '../hocs/PrivateRoute';
-import firebase from "firebase";
+import { useAuth } from "../hooks/useAuth";
 
 function Routing() {
-    const [authed, setAuthed] = useState(false);
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                setAuthed(true);
-            } else {
-                setAuthed(false);
-            }
-        })
-    }, []);
+    const authed = useAuth().isAuth;
 
     return (
-        <BrowserRouter>
+        <PersistGate persistor={persistor} loading={<CircularProgress />}>
             <header>
                 <nav style={{
                     borderBottom: "solid 1px",
@@ -41,23 +31,19 @@ function Routing() {
                     <Link to="/login">Login</Link>
                 </nav>
             </header>
-            <Provider store={store}>
-                <PersistGate persistor={persistor} loading={<CircularProgress />}>
-                    <Routes>
-                        <PublicRoute authenticated={authed} exact path='/' element={<Home />} />
-                        <PrivateRoute authenticated={authed} path='profile' element={<Profile />} />
-                        <PrivateRoute authenticated={authed} path='chats' element={<Navigate replace to="/chats/id1" />} >
-                            < PrivateRoute authenticated={authed} path=':chatId' element={< Chats />} />
-                        </PrivateRoute>
-                        <Route path='*' element={<h3>Page not found</h3>} />
-                        <PublicRoute authenticated={authed} path='/gists' element={<GistsList />} />
-                        <PrivateRoute authenticated={authed} path='/nochat' element={<h3>нет чатов</h3>} />
-                        <PublicRoute authenticated={authed} path='/signup' element={<SignUp />} />
-                        <PublicRoute authenticated={authed} path='/login' element={<Login />} />
-                    </Routes>
-                </PersistGate>
-            </Provider>
-        </BrowserRouter >
+            <Routes>
+                <Route authenticated={authed} exact path='/' element={<Home />} />
+                <Route authenticated={authed} path='profile' element={<Profile />} />
+                <Route authenticated={authed} path='chats' element={<Navigate to="/chats/id1" />} >
+                    < Route authenticated={authed} path=':chatId' element={< Chats />} />
+                </Route>
+                <Route path='*' element={<h3>Page not found</h3>} />
+                <Route authenticated={authed} path='/gists' element={<GistsList />} />
+                <Route authenticated={authed} path='/nochat' element={<h3>нет чатов</h3>} />
+                <Route authenticated={authed} path='/signup' element={<SignUp />} />
+                <Route authenticated={authed} path='/login' element={<Login />} />
+            </Routes>
+        </PersistGate>
     )
 }
 
