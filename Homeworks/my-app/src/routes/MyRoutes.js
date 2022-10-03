@@ -9,8 +9,6 @@ import { GistsList } from '../components/gists';
 import { CircularProgress } from '@material-ui/core';
 import { SignUp } from '../components/signup';
 import { Login } from '../components/login';
-import PublicRoute from '../hocs/PublicRote';
-import PrivateRoute from '../hocs/PrivateRoute';
 import { useAuth } from "../hooks/useAuth";
 
 function Routing() {
