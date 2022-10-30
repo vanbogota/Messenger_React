@@ -1,27 +1,28 @@
+
 import { useState } from "react";
-import firebase from "firebase";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { createUserThunk, loginThunk } from "../slices/slices"
 
 export const SignUp = () => {
+    const isAuth = useAuth().isAuth;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+
+    const dispatch = useDispatch();
+
     const handlePassChange = (e) => {
         setPassword(e.target.value);
     };
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-        try {
-            await firebase.auth().createUserWithEmailAndPassword(email, password);
-        } catch (error) {
-            setError(error.message);
-        }
+    const handleSubmit = () => {
+        dispatch(createUserThunk({ email, password }))
     };
-    return (
+    return !isAuth ? (
         <div>
             <form onSubmit={handleSubmit}>
                 <p>Fill in the form below to register new account.</p>
@@ -44,7 +45,6 @@ export const SignUp = () => {
                     />
                 </div>
                 <div>
-                    {error && <p>{error}</p>}
                     <button type="submit">Login</button>
                 </div>
                 <hr />
@@ -53,5 +53,5 @@ export const SignUp = () => {
                 </p>
             </form>
         </div>
-    );
+    ) : (<Navigate to={'/profile'} />)
 }

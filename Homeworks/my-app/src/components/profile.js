@@ -1,8 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { showName, changeName } from "../slices/slices";
+import { useAuth } from "../hooks/useAuth";
+import { showName, changeName, removeUser } from "../slices/slices";
+import { Navigate } from "react-router-dom";
 
 export default function Profile() {
+    const isAuth = useAuth();
     const { showN, name } = useSelector((state) => state);
     const dispatch = useDispatch();
     const [value, setValue] = useState('');
@@ -19,11 +22,14 @@ export default function Profile() {
         dispatch(changeName(value))
     }, [dispatch, value]);
 
-    return (
+    return isAuth.isAuth ? (
         <>
+            <h4>Profile</h4>
             <div>
-                <h4>Profile</h4>
+                <h2>Привет,{isAuth.email}</h2>
             </div>
+            <button onClick={() => { dispatch(removeUser()) }}>Выйти из аккаунта</button>
+
             <div>
                 <input
                     type="checkbox"
@@ -45,6 +51,5 @@ export default function Profile() {
                 <button onClick={setName}>Change Name</button>
             </div>
         </>
-
-    );
+    ) : (<Navigate to={'/login'} />)
 }
