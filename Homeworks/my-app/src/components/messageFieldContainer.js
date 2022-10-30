@@ -1,24 +1,34 @@
 import { TextField } from '@material-ui/core';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import { getChatById, getChatList } from '../store/chats/selectors';
 import { addMessage, addMessageWithThunk } from '../store/messages/actions';
 import { getMessagesList } from '../store/messages/selectors';
 import { MessageField } from './messageField';
+import firebase from 'firebase';
 
-export const MessageFieldContainer = () => {
+export default function MessageFieldContainer() {
     const { chatId } = useParams();
-    const chats = useSelector(getChatList);
-    const messageList = useSelector(getMessagesList);
-    const dispatch = useDispatch();
+    const [messages, setMessages] = useState([]);
     const onAddMessage = useCallback(
         (message) => {
-            dispatch(addMessageWithThunk(chatId, message));
+            firebase.database()
+                .ref("messages")
+                .child(chatId)
+                .child(message.id)
+                .set(message);
         },
         [chatId]
     );
-    const onAddChat = useCallback((newChatName) => {
-        dispatch(addChat(newChatName));
+    useEffect(() => {
+        firebase.database().ref("messages").child(chatId).on("value", (snapshot) => {
+            const newMessages = [];
+            snapshot.forEach(entry => {
+                messages.push(entry.val());
+            });
+            setMessages(newMessages);
+        });
     }, []);
     if (!chatId) {
         return (
@@ -28,15 +38,20 @@ export const MessageFieldContainer = () => {
         );
     }
     if (!chats[chatId]) {
-        return <Redirect to="/nochat" />;
+        return <div>No chat</div>;
     }
     return (
-        <MessageField
-            chatId={chatId}
-            messages={messageList[chatId]}
-            onAddChat={onAddChat}
-            onAddMessage={onAddMessage}
-        />
+        <>
+            <header>Header</header>
+            <div className="wrapper">
+                <div>
+                    <ChatList chatId={chatId} />
+                </div>
+                <div>
+                    <MessagesList messages={messages} />
+                    <Input onAddMessage={onAddMessage} />
+                </div>
+            </div>
+        </>
     );
-
 }

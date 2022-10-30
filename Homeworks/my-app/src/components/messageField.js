@@ -1,5 +1,6 @@
 import { Input, TextField } from '@material-ui/core';
 import React from 'react';
+import { ChatList } from './chats';
 import MessagesList from './messageslist';
 
 export const MessageField = ({ chatId, messages, onAddMessage, onAddChat }) => (

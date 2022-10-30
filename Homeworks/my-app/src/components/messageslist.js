@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { shallowEqual, useSelector } from "react-redux";
 import { getProfileName } from "../store/profile/selectors";
 
-
 function MessagesList({ messages }) {
 
     const profileName = useSelector(getProfileName, shallowEqual);
