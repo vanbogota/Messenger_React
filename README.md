@@ -1,2 +1,2 @@
-# GB_React
-Курс в GB по React
+# Messenger_React
+Messenger for registred users
