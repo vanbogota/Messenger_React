@@ -1,2 +1,2 @@
 # Messenger_React
-Messenger for registred users
+Messenger for registred users. Platform - React JS
